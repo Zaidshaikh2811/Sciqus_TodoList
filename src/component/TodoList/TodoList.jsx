@@ -3,6 +3,7 @@ import styles from './TodoList.module.scss';
 
 // now receive onToggle and onDelete and must pass them down
 const TodoList = ({ todos, onToggle, onDelete }) => {
+  console.log('TodoList rendered with todos:', todos);
   return (
     <ul className={styles.todoList}>
       {todos.map((todo) => (

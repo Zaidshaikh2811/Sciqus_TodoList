@@ -1,102 +1,107 @@
 import { useState, useEffect } from 'react';
-import Login from './component/login/Login';
-import Signup from './component/login/Signup';
-import TodoList from './component/TodoList/TodoList';
-import TodoForm from './component/TodoForm/TodoForm';
-import { initialTodos } from './data/initialTodos';
 import './App.scss';
-
-// Load initial todos from localStorage or fallback to default
-const getInitialState = () => {
-  const savedTodos = localStorage.getItem('todos');
-  return savedTodos ? JSON.parse(savedTodos) : initialTodos;
-};
+import Dashboard from "./page/Dashboard.jsx";
+import Signup from "./component/login/Signup.jsx";
+import Login from "./component/login/Login.jsx";
+import { fetchUsers, addUser } from "./lib/fileApi";
 
 function App() {
-  const [todos, setTodos] = useState(getInitialState);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('isLoggedIn') === 'true');
   const [showSignup, setShowSignup] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // Save todos to localStorage when changed
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+    fetchUsers().then(setUsers);
+  }, []);
 
-  // Login with validation from localStorage
-  const handleLogin = (email, password) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.email === email) {
+  useEffect(() => {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogin = async (email, password) => {
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
       setIsLoggedIn(true);
+      setCurrentUser(user);
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      return true;
     } else {
-      alert('User not found. Please sign up.');
+      return false;
     }
   };
 
-  const handleSignup = (name, email, password) => {
-    if (name && email && password) {
-      localStorage.setItem('user', JSON.stringify({ name, email, password }));
-      setShowSignup(false);
-      alert('Signup successful! Please log in.');
-    } else {
-      alert('Please fill all fields.');
+  const handleSignup = async (name, email, password) => {
+    if (users.some(u => u.email === email)) {
+      return false; // Email already exists
     }
+    const newUser = { id: Date.now(), name, email, password };
+    const updatedUsers = await addUser(newUser);
+    setUsers(updatedUsers);
+    setShowSignup(false);
+    return true;
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-  };
-
-  const addTodo = (text) => {
-    const newTodo = {
-      id: Date.now(),
-      text,
-      completed: false,
-    };
-    setTodos([newTodo, ...todos]);
-  };
-
-  const toggleTodo = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
-
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    setCurrentUser(null);
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('currentUser');
   };
 
   return (
-    <div className="app-container">
+    <div>
       {!isLoggedIn ? (
         <>
           {showSignup ? (
-            <>
-              <Signup onSignup={handleSignup} />
-              <p>
-                Already have an account?{' '}
-                <button onClick={() => setShowSignup(false)}>Login</button>
-              </p>
-            </>
+            <Signup onSignup={handleSignup} />
           ) : (
-            <>
-              <Login onLogin={handleLogin} />
-              <p>
-                Don't have an account?{' '}
-                <button onClick={() => setShowSignup(true)}>Sign Up</button>
-              </p>
-            </>
+            <Login onLogin={handleLogin} />
           )}
+          <p>
+            {showSignup ? (
+              <>Already have an account? <button onClick={() => setShowSignup(false)}>Login</button></>
+            ) : (
+              <>Don't have an account? <button onClick={() => setShowSignup(true)}>Sign Up</button></>
+            )}
+          </p>
         </>
       ) : (
         <>
-          <h1>Sciqus Todo List</h1>
-          <button onClick={handleLogout} style={{ marginBottom: '10px' }}>
-            Logout
-          </button>
-          <TodoForm onAddTodo={addTodo} />
-          <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
+          {
+            currentUser && <h2>Welcome, {currentUser.name}!</h2>
+          }
+
+          {
+            currentUser && (
+
+              <>
+
+            <button
+              onClick={handleLogout}
+              className="logout-btn"
+              style={{ float: 'right', margin: 8 ,
+                padding: '8px 16px',
+                backgroundColor: '#ff4d4d',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }
+
+            }
+            >
+              Logout
+            </button>
+            <Dashboard user={currentUser} />
+          </>
+           )
+              }
+
         </>
       )}
     </div>

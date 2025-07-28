@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import './Auth.scss';
 
-const Signup = () => {
-  const navigate = useNavigate();
+const Signup = ({ onSignup }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-
-    const newUser = { name, email, password };
-    localStorage.setItem('user', JSON.stringify(newUser));
-    alert('Account created! You can now login.');
-    navigate('/');
+    const result = await onSignup(name, email, password);
+    if (result) {
+      setSuccess('Account created! You can now login.');
+      setError('');
+      setName('');
+      setEmail('');
+      setPassword('');
+    } else {
+      setSuccess('');
+    }
+      setError('Email already exists!');
   };
 
   return (
@@ -22,18 +28,17 @@ const Signup = () => {
       <div className="auth-left">
         <h2>Sign Up</h2>
         <p>Create your account to start managing your tasks</p>
-        <p>
-          Already have an account? <Link to="/"><strong>Login</strong></Link>
-        </p>
+        <img src="/vite.svg" alt="Logo" style={{width: '80px', marginTop: '2rem'}} />
       </div>
       <div className="auth-right">
         <form onSubmit={handleSignup}>
           <input
             type="text"
-            placeholder="Full Name"
+            placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            autoFocus
           />
           <input
             type="email"
@@ -50,6 +55,8 @@ const Signup = () => {
             required
           />
           <button type="submit">Sign Up</button>
+          {error && <div className="auth-error">{error}</div>}
+          {success && <div className="auth-success">{success}</div>}
         </form>
       </div>
     </div>

@@ -41,3 +41,45 @@ h1 {
   font-size: 2.5rem;
   margin-bottom: 2rem;
 }
+
+.search-input {
+  padding: 10px 14px;
+  border: 1.5px solid $border-color;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 95%;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s;
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    background: $hover-color;
+  }
+}
+
+.pagination-container {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.pagination-btn {
+  background: $secondary-color;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  &:hover:not(:disabled) {
+    background: $primary-color;
+  }
+  &:disabled,
+  &.active {
+    background: $disabled-color;
+    color: $text-secondary;
+    cursor: default;
+  }
+}
