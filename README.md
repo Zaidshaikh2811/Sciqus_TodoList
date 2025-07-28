@@ -1,12 +1,60 @@
-# React + Vite
+# Sciqus Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern Todo List application built with React and Vite. This project features user authentication, CRUD operations for todos and users, search, pagination, and persistent storage using localStorage and static JSON files for demo purposes.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User Signup & Login (with localStorage persistence)
+- Add, edit, complete, and delete todos
+- Each todo is associated with a user (multi-user support)
+- Search todos by text
+- Pagination for large todo lists
+- Styled with modern, responsive UI
+- In-memory and file-based (localStorage) data storage
+- Dummy data for quick start
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+- Node.js (v16+ recommended)
+- npm or yarn
+
+### Installation
+
+```bash
+npm install
+```
+
+### Running the App
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Project Structure
+
+- `src/` - Main source code
+  - `component/` - Reusable UI components (Login, Signup, TodoForm, TodoList, TodoItem)
+  - `page/` - Main pages (Dashboard, NotFound)
+  - `lib/` - API logic for CRUD operations (fileApi.js)
+  - `data/` - Initial dummy data
+  - `store/` - State management (authStore.js)
+- `public/` - Static files (todos.json, users.json, logo)
+
+### Data Storage
+- Todos and users are loaded from `/public/todos.json` and `/public/users.json` on first load.
+- All changes are saved to localStorage (no backend server required).
+
+### Customization
+- Update styles in `src/component/login/Auth.scss`, `App.scss`, and component `.module.scss` files.
+- Modify initial data in `src/data/initialTodos.js` or the JSON files in `public/`.
+
+### Limitations
+- This project is for demo/learning purposes. Data is not persisted to a real backend.
+- POST requests to static JSON files will not work in production/static hosting.
+
+## License
+
+MIT

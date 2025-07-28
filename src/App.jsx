@@ -62,11 +62,47 @@ function App() {
           ) : (
             <Login onLogin={handleLogin} />
           )}
-          <p>
+          <p style={{ textAlign: 'center', marginTop: 24 }}>
             {showSignup ? (
-              <>Already have an account? <button onClick={() => setShowSignup(false)}>Login</button></>
+              <>
+                Already have an account?{' '}
+                <button
+                  onClick={() => setShowSignup(false)}
+                  style={{
+                    background: 'transparent',
+                    color: '#007bff',
+                    border: '1px solid #007bff',
+                    borderRadius: 4,
+                    padding: '6px 16px',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    marginLeft: 4,
+                    transition: 'background-color 0.3s, color 0.3s'
+                  }}
+                >
+                  Login
+                </button>
+              </>
             ) : (
-              <>Don't have an account? <button onClick={() => setShowSignup(true)}>Sign Up</button></>
+              <>
+                Don't have an account?{' '}
+                <button
+                  onClick={() => setShowSignup(true)}
+                  style={{
+
+                    color: '#000066',
+                    border: 'none',
+                    backgroundColor: 'transparent',
+                    borderRadius: 4,
+                    padding: '6px 16px',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    marginLeft: 4
+                  }}
+                >
+                  Sign Up
+                </button>
+              </>
             )}
           </p>
         </>
@@ -86,8 +122,8 @@ function App() {
               className="logout-btn"
               style={{ float: 'right', margin: 8 ,
                 padding: '8px 16px',
-                backgroundColor: '#ff4d4d',
-                color: '#fff',
+               backgroundColor: '#f0f0f0',
+                color: '#000066',
                 border: 'none',
                 borderRadius: '4px',
                 cursor: 'pointer'
