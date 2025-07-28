@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import TodoList from './component/TodoList/TodoList';
+import TodoForm from './component/TodoForm/TodoForm';
+import { initialTodos } from './data/initialTodos';
+import './App.scss';
 
-function App() {
-  const [count, setCount] = useState(0)
+// A function to get initial state from localStorage or use the dummy data
+const getInitialState = () => {
+  const savedTodos = localStorage.getItem('todos');
+  return savedTodos ? JSON.parse(savedTodos) : initialTodos;
+};
+
+function App() { 
+  const [todos, setTodos] = useState(getInitialState);
+  // Save to localStorage whenever todos changes
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);  
+ 
+  const addTodo = (text) => {
+    const newTodo = {
+      id: Date.now(),  
+      text: text,
+      completed: false,
+    };
+    setTodos([newTodo, ...todos]); 
+  };
+
+  // Handler to toggle the completed status of a todo
+  const toggleTodo = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+ 
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app-container">
+      <h1>Sciqus Todo List</h1>
+      <TodoForm onAddTodo={addTodo} />
+      <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
+    </div>
+  );
 }
 
-export default App
+export default App;

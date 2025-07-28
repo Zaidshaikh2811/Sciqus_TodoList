@@ -1,0 +1,43 @@
+$background-color: #f9f9fb;
+$primary-color: #5e60ce;
+$secondary-color: #4ea8de;
+$text-primary: #1a1a1a;
+$text-secondary: #6c757d;
+$completed-color: #38b000;
+$danger-color: #ef233c;
+$card-bg-color: #ffffff;
+$border-color: #dee2e6;
+$hover-color: #dbeafe;
+$disabled-color: #e0e0e0;
+
+// GLOBAL STYLES
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: $background-color;  
+  color: $text-primary;  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+// The main container  
+.app-container {
+  width: 100%;
+  max-width: 550px;
+  min-height: 400px;
+  background-color: $card-bg-color;  
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+}
+
+// Title styling
+h1 {
+  text-align: center;
+  color: $text-primary;
+  font-weight: 600;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
